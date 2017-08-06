@@ -1,1 +1,22 @@
-./create-linux-uefi-boot.sh /boot/vmlinuz-4.4.0-64-generic /boot/initrd.img-4.4.0-64-generic "root=ZFS=zpool_ssd/rootfs_ubuntu1604 boot=zfs" /tmp/bootx64.efi
+
+
+ Create UEFI linux executable that boots from zfs filesystem, from dataset zpool_ssd/rootfs_ubuntu1604:
+	./create-linux-uefi-boot.sh /boot/vmlinuz-4.4.0-64-generic /boot/initrd.img-4.4.0-64-generic "root=ZFS=zpool_ssd/rootfs_ubuntu1604 boot=zfs" /tmp/bootx64.efi
+	# copy the /tmp/bootx64.efi file to the efi partition, to /boot/efi/bootx64.efi
+
+    For best practice to boot linux's rootfilesystem from zfs, the drive should be partitioned as follow:
+    
+    1.  efi partiion (200mb).  This is also known as a vfat partition, but the partition type is uefi.
+    1.  ext boot partiion (200mb).  This partition is needed if you can to boot in CMS, also known as MBR boot.
+									Typically, this partition is flaged as active boot.   
+    2.  solaris partition (full drive) - this is a zfs zpool, ie) zpool_ssd.  Under this partition there
+										 should exist a dataset called rootfs.
+
+	By following the above convention, linux can be booted on a usb drive on any x86 machines.  
+	The beauty is that zfs dataset can be updated or repair if it gets corrupted, a problem that can
+	not easily be fixed if rootfs is run on ext3/4.
+
+
+
+ Enjoy!	
+ 
