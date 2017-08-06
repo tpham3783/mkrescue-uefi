@@ -1,0 +1,1 @@
+./create-linux-uefi-boot.sh /boot/vmlinuz-4.4.0-64-generic /boot/initrd.img-4.4.0-64-generic "root=ZFS=zpool_ssd/rootfs_ubuntu1604 boot=zfs" /tmp/bootx64.efi
