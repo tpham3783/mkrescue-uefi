@@ -42,25 +42,30 @@ fi
 
 trap '
     ret=$?;
-    [[ $CMDLINE_DIR ]] && rm -rf -- "$CMDLINE_DIR";
+	[[ $CMDLINE_DIR ]] && rm -rf -- "$CMDLINE_DIR";
     exit $ret;
     ' EXIT
 
+[[ $CMDLINE_DIR ]] && rm -rf -- "$CMDLINE_DIR";
 readonly CMDLINE_DIR="$(mktemp -d -t cmdline.XXXXXX)"
+#CMDLINE_DIR="$(mktemp -t cmdline.XXXXXX)"
 
 echo -ne "$3\x00" > "$CMDLINE_DIR/cmdline.txt"
 
-if [ ! -f /usr/lib/gummiboot/linuxx64.efi.stub ]; then
+EFI_EXE_STUB=/usr/lib/gummiboot/linuxx64.efi.stub
+if [ ! -f $EFI_EXE_STUB ]; then
 	echo "Missing gummiboot dependency, please install it."
 	echo "On ubuntu, you can run apt install gummiboot to install it"
+	EFI_EXE_STUB=resources/gummiboot/linuxx64.efi.stub
 fi
 
-objcopy \
-    --add-section .osrel=/etc/os-release --change-section-vma .osrel=0x20000 \
-    --add-section .cmdline="$CMDLINE_DIR/cmdline.txt" --change-section-vma .cmdline=0x30000 \
-    --add-section .linux="$KERNEL" --change-section-vma .linux=0x40000 \
-    --add-section .initrd="$INITRD" --change-section-vma .initrd=0x3000000 \
-    /usr/lib/gummiboot/linuxx64.efi.stub "$4"
+objcopy -v\
+    --update-section .osrel=/etc/os-release --change-section-vma .osrel=0x20000 \
+    --update-section .linux="$KERNEL" --change-section-vma .linux=0x40000 \
+    --update-section .initrd="$INITRD" --change-section-vma .initrd=0x3000000 \
+    --update-section .cmdline="$CMDLINE_DIR/cmdline.txt" --change-section-vma .cmdline=0x30000 \
+    $EFI_EXE_STUB "$4"
+
 
 echo "--------------------------------------------------------------------------------------"
 echo "Succesfully created '$4'"
