@@ -10,12 +10,12 @@ set -e
 
 if ! [[ $1 ]]; then
     echo "Usage: $0 <input kernel> <input initrd> <custom kernel param> <output efi file>" >&2
-	echo "ie: ./$0 /boot/vmlinuz-4.4.0-64-generic /boot/initrd.img-4.4.0-64-generic "root=ZFS=portable/rootfs boot=zfs" /tmp/bootx64.efi"
+	echo "ie: ./$0 /boot/vmlinuz-4.4.0-64-generic /boot/initrd.img-4.4.0-64-generic \"root=ZFS=portable/rootfs boot=zfs\" /tmp/bootx64.efi"
 	echo ""
 	echo " To support zfs boot, make sure you install zfs-initramfs package, then run this command to repackage initrd"
 	echo "     update-initramfs -k 4.4.0-64-generic -u -v"
 	echo " and then run this command to generate a efi executable:"
-	echo "     $0 /boot/vmlinuz-4.4.0-64-generic /boot/initrd.img-4.4.0-64-generic "root=ZFS=portable/rootfs boot=zfs" /tmp/bootx64.efi"
+	echo "     $0 /boot/vmlinuz-4.4.0-64-generic /boot/initrd.img-4.4.0-64-generic \"root=ZFS=portable/rootfs boot=zfs\" /tmp/bootx64.efi"
     exit 1
 fi
 
