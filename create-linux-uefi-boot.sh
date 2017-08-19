@@ -16,6 +16,7 @@ if ! [[ $1 ]]; then
 	echo "     update-initramfs -k 4.4.0-64-generic -u -v"
 	echo " and then run this command to generate a efi executable:"
 	echo "     $0 /boot/vmlinuz-4.4.0-64-generic /boot/initrd.img-4.4.0-64-generic \"root=ZFS=portable/rootfs boot=zfs\" /tmp/bootx64.efi"
+	echo " Note: Please not that CONFIG_EFI_STUB=y must be enabled in the kernel to be able to boot linux from UEFI."
     exit 1
 fi
 
@@ -76,6 +77,6 @@ echo "--------------------------------------------------------------------------
 echo "Succesfully created '$4'"
 echo "   input kernel: $1"
 echo "   input initrd: $2"
-echo "   input kernel param: $3"
-echo "Now copy '$4' to a USB stick to EFI/BOOT/BOOTX64.EFI in the first (boot) FAT partition"
-echo "and point your BIOS to boot from the USB stick"
+echo "   input kernel param: $(< $CMDLINE_DIR/cmdline.txt)"
+echo "Now copy '$4' to <efi_boot_drive>/EFI/BOOT/BOOTX64.EFI, and then"
+echo "point your BIOS to boot from the drive"
